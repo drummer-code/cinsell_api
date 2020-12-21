@@ -9,7 +9,9 @@ api =FastAPI()
 from fastapi.middleware.cors import CORSMiddleware
 origins = [
     "http://localhost.tiangolo.com", "https://localhost.tiangolo.com",
-    "http://localhost", "http://localhost:8080","http://localhost:8080/perfil"
+    "http://localhost", "http://localhost:8080","http://localhost:8080/perfil",
+    "http://127.0.0.1:8080", "http://127.0.0.1:8080/perfil"
+    
 ]
 api.add_middleware(
     CORSMiddleware, allow_origins=origins,
@@ -26,9 +28,18 @@ async def users_post(user_in:UserIn):
             return {"Autenticado": False}
     return {"Autenticado": True}
 
-@api.get("/users/")
-async def users_get(user_in:User):
-    user = get_user(user_in.username)
+# @api.get("/users/")
+# async def users_get(user_in:User):
+#     user = get_user(user_in.username)
+#     if user == None:
+#         raise HTTPException(status_code=404,
+#     detail="El usuario no existe")
+#     user_out = UserOut(**user.dict())
+#     return user_out
+
+@api.get("/users/{user}")
+async def users_get(user:str):
+    user = get_user(user)
     if user == None:
         raise HTTPException(status_code=404,
     detail="El usuario no existe")
